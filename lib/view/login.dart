@@ -117,10 +117,9 @@ class Login extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
                   child: ElevatedButton(
                     onPressed: () {
-
                       bool loginSuccess = false;
                       if (!loginSuccess) {
-                        _loginController.showErrorDialog();
+                        _loginController.showErrorDialog(context, "Error", "Invalid login credentials");
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -149,11 +148,11 @@ class Login extends StatelessWidget {
                         onChanged: (newBool) {},
                       ),
                     ),
-                    const Text("Remember me",style: TextStyle(color: Colors.black),),
+                    const Text("Remember me", style: TextStyle(color: Colors.black)),
                     const SizedBox(width: 80),
                     TextButton(
                       onPressed: () {},
-                      child: const Text("Forgot Password?",style: TextStyle(color: Colors.black),),
+                      child: const Text("Forgot Password?", style: TextStyle(color: Colors.black)),
                     ),
                   ],
                 ),

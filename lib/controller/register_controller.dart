@@ -61,12 +61,12 @@ class RegisterController extends GetxController {
 
       if (response.statusCode == 200) {
         Get.snackbar("Success", "Registration successful");
-        Get.toNamed('/login'); // Navigate to login screen
+        Get.toNamed('/login');
       } else {
-        showErrorDialog(context, "Error", "Registration failed: ${response.body}");
+        showErrorDialog(context, "Error", "Registration failed");
       }
     } catch (e) {
-      showErrorDialog(context, "Error", "An error occurred: $e");
+      showErrorDialog(context, "Error", "An error occurred");
     } finally {
       isLoading.value = false;
     }
