@@ -45,11 +45,13 @@ class LoginController extends GetxController {
 
       if (response.statusCode == 200) {
 
+        // maybe navigate to home screen
+
       } else {
-        showErrorDialog(context, "Error", "Login failed: ${response.body}");
+        showErrorDialog(context, "Sorry!", "incorrect password or email");
       }
     } catch (e) {
-      showErrorDialog(context, "Error", "An error occurred: $e");
+      showErrorDialog(context,"Sorry!", "incorrect password or email" );
     }
   }
 }

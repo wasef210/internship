@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:internship/view//dialog_widget.dart';
+import 'package:internship/view/dialog_widget.dart';
 
 class RegisterController extends GetxController {
   var obscurePassword = true.obs;
@@ -17,7 +17,7 @@ class RegisterController extends GetxController {
     obscureConfirmPassword.value = !obscureConfirmPassword.value;
   }
 
-  void showErrorDialog(BuildContext context, String title, String message) {
+  void showErrorDialog(BuildContext context, String title, String message, {String buttonText = "OK", VoidCallback? onButtonPressed}) {
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -25,6 +25,8 @@ class RegisterController extends GetxController {
         return ErrorDialog(
           title: title,
           message: message,
+          buttonText: buttonText,
+          onButtonPressed: onButtonPressed ?? () => Get.back(),
         );
       },
     );
@@ -39,7 +41,6 @@ class RegisterController extends GetxController {
     isLoading.value = true;
 
     try {
-
       String token = "your_auth_token";
       var headers = {
         'Content-Type': 'application/json',
@@ -63,10 +64,28 @@ class RegisterController extends GetxController {
         Get.snackbar("Success", "Registration successful");
         Get.toNamed('/login');
       } else {
-        showErrorDialog(context, "Error", "Registration failed");
+        showErrorDialog(
+          context,
+          "Error",
+          "Registration failed",
+          buttonText: "Try Again",
+          onButtonPressed: () {
+            Get.back();
+            register(username, email, mobile, password, confirmPassword, context);
+          },
+        );
       }
     } catch (e) {
-      showErrorDialog(context, "Error", "An error occurred");
+      showErrorDialog(
+        context,
+        "Oh no!",
+        "something went work ",
+        buttonText: "Try Again",
+        onButtonPressed: () {
+          Get.back();
+          register(username, email, mobile, password, confirmPassword, context);
+        },
+      );
     } finally {
       isLoading.value = false;
     }
