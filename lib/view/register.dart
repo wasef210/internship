@@ -241,7 +241,7 @@ class Register extends StatelessWidget {
                 const SizedBox(height: 20),
                 TextButton(
                   onPressed: () {
-                    Get.offNamed('/login');
+                    Get.offNamed('/auth');
                   },
                   child: const Text(
                     "Already have an account? Log in",
