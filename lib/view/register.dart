@@ -236,7 +236,7 @@ class Register extends StatelessWidget {
                       TextSpan(
                           text: 'login',
                           style: const TextStyle(
-                              color: Color.fromARGB(255, 182, 229, 185)),
+                              color: Colors.green),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
                               Get.offNamed('/login');

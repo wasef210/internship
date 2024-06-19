@@ -15,4 +15,4 @@ void main() => runApp(GetMaterialApp(
 
     ]
     ,
-    home: Splash() ));
+    home: const Splash() ));
