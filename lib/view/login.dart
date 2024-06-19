@@ -28,12 +28,11 @@ class Login extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 30,
-                ),
+                const SizedBox(height: 30),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(25, 0, 25, 10),
                   child: TextField(
+                    controller: _loginController.emailController,
                     decoration: InputDecoration(
                       suffixIcon: const Icon(Icons.email_outlined),
                       hintText: "Email",
@@ -53,12 +52,11 @@ class Login extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
+                const SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(25, 0, 25, 10),
                   child: TextField(
+                    controller: _loginController.mobileController,
                     decoration: InputDecoration(
                       hintText: "Mobile Number",
                       hintStyle: const TextStyle(
@@ -82,6 +80,7 @@ class Login extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(25, 0, 25, 10),
                   child: Obx(() {
                     return TextField(
+                      controller: _loginController.passwordController,
                       obscureText: _loginController.obscureText.value,
                       decoration: InputDecoration(
                         suffixIcon: IconButton(
@@ -90,9 +89,7 @@ class Login extends StatelessWidget {
                                 ? Icons.visibility
                                 : Icons.visibility_off,
                           ),
-                          onPressed: () {
-                            _loginController.toggleObscureText();
-                          },
+                          onPressed: _loginController.toggleObscureText,
                         ),
                         hintText: "Password",
                         hintStyle: const TextStyle(
@@ -115,44 +112,56 @@ class Login extends StatelessWidget {
                 const SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      bool loginSuccess = false;
-                      if (!loginSuccess) {
-                        _loginController.showErrorDialog(context, "Error", "Invalid login credentials");
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      shape: const StadiumBorder(),
-                      backgroundColor: const Color.fromARGB(255, 182, 229, 185),
-                    ),
-                    child: const SizedBox(
-                      width: double.infinity,
-                      child: Text(
-                        "Log in",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Color.fromARGB(255, 3, 80, 20),
+                  child: Obx(() {
+                    return ElevatedButton(
+                      onPressed: _loginController.isLoading.value
+                          ? null
+                          : () {
+                              _loginController.login();
+                            },
+                      style: ElevatedButton.styleFrom(
+                        shape: const StadiumBorder(),
+                        backgroundColor:
+                            const Color.fromARGB(255, 182, 229, 185),
+                      ),
+                      child: const SizedBox(
+                        width: double.infinity,
+                        child: Text(
+                          "Log in",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Color.fromARGB(255, 3, 80, 20),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
+                    );
+                  }),
                 ),
                 Row(
                   children: [
                     Padding(
                       padding: const EdgeInsets.fromLTRB(25, 5, 25, 5),
-                      child: Checkbox(
-                        value: true,
-                        onChanged: (newBool) {},
-                      ),
+                      child: Obx(() {
+                        return Checkbox(
+                          value: _loginController.rememberMe.value,
+                          onChanged: (newBool) {
+                            _loginController.rememberMe.value = newBool!;
+                          },
+                        );
+                      }),
                     ),
-                    const Text("Remember me", style: TextStyle(color: Colors.black)),
-                    const SizedBox(width: 80),
+                    const Text(
+                      "Remember me",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    const Spacer(),
                     TextButton(
                       onPressed: () {},
-                      child: const Text("Forgot Password?", style: TextStyle(color: Colors.black)),
+                      child: const Text(
+                        "Forgot Password?",
+                        style: TextStyle(color: Colors.black),
+                      ),
                     ),
                   ],
                 ),
@@ -161,7 +170,7 @@ class Login extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(25, 5, 25, 5),
                   child: ElevatedButton(
                     onPressed: () {
-                      Get.offNamed('/register');
+                      Get.toNamed('/register');
                     },
                     style: ElevatedButton.styleFrom(
                       shape: const StadiumBorder(),
@@ -170,7 +179,7 @@ class Login extends StatelessWidget {
                     child: const SizedBox(
                       width: double.infinity,
                       child: Text(
-                        "Create New Account",
+                        "Create new account",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 20,

@@ -2,29 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:internship/view//dialog_widget.dart';
+import 'package:internship/view/dialog_widget.dart';
 
 class LoginController extends GetxController {
   var obscureText = true.obs;
+  var isLoading = false.obs;
+  var rememberMe = false.obs;
+
+  final emailController = TextEditingController();
+  final mobileController = TextEditingController();
+  final passwordController = TextEditingController();
 
   void toggleObscureText() {
     obscureText.value = !obscureText.value;
   }
 
-  void showErrorDialog(BuildContext context, String title, String message) {
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return ErrorDialog(
-          title: title,
-          message: message,
-        );
-      },
-    );
-  }
+  Future<void> login() async {
+    isLoading.value = true;
+    final email = emailController.text;
+    final mobile = mobileController.text;
+    final password = passwordController.text;
 
-  Future<void> login(String email, String password, BuildContext context) async {
     try {
       String token = "your_auth_token";
       var headers = {
@@ -34,24 +32,35 @@ class LoginController extends GetxController {
 
       var body = {
         'email': email,
+        'mobile': mobile,
         'password': password,
       };
 
       var response = await http.post(
-        Uri.parse('https://your.api.endpoint/login'),
+        Uri.parse('api'),
         headers: headers,
         body: jsonEncode(body),
       );
 
       if (response.statusCode == 200) {
-
-        // maybe navigate to home screen
-
+        Get.offNamed('/home');
       } else {
-        showErrorDialog(context, "Sorry!", "incorrect password or email");
+        Get.dialog(
+          const ErrorDialog(
+            title: 'Sorry!',
+            message: 'Incorrect password or email',
+          ),
+        );
       }
     } catch (e) {
-      showErrorDialog(context,"Sorry!", "incorrect password or email" );
+      Get.dialog(
+        const ErrorDialog(
+          title: 'Sorry!',
+          message: 'Incorrect password or email',
+        ),
+      );
+    } finally {
+      isLoading.value = false;
     }
   }
 }

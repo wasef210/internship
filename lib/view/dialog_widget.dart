@@ -5,28 +5,52 @@ class ErrorDialog extends StatelessWidget {
   final String message;
   final String? buttonText;
   final VoidCallback? onButtonPressed;
+  final String? secondButtonText;
+  final VoidCallback? onSecondButtonPressed;
 
   const ErrorDialog({
-    Key? key,
+    super.key,
     required this.title,
     required this.message,
     this.buttonText,
     this.onButtonPressed,
-  }) : super(key: key);
+    this.secondButtonText,
+    this.onSecondButtonPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(title),
-      content: Text(message),
-      actions: [
-        if (buttonText != null && onButtonPressed != null)
-          TextButton(
-            onPressed: onButtonPressed,
-            child: Text(buttonText!),
-          ),
-
-      ],
+      title: Text(
+        title,
+        textAlign: TextAlign.center,
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(message),
+          if (buttonText != null && onButtonPressed != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 20.0),
+              child: Center(
+                child: TextButton(
+                  onPressed: onButtonPressed,
+                  child: Text(buttonText!),
+                ),
+              ),
+            ),
+          if (secondButtonText != null && onSecondButtonPressed != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: Center(
+                child: TextButton(
+                  onPressed: onSecondButtonPressed,
+                  child: Text(secondButtonText!),
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }

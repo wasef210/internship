@@ -9,6 +9,12 @@ class RegisterController extends GetxController {
   var obscureConfirmPassword = true.obs;
   var isLoading = false.obs;
 
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController mobileController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
+
   void toggleObscurePassword() {
     obscurePassword.value = !obscurePassword.value;
   }
@@ -17,28 +23,29 @@ class RegisterController extends GetxController {
     obscureConfirmPassword.value = !obscureConfirmPassword.value;
   }
 
-  void showErrorDialog(BuildContext context, String title, String message, {String buttonText = "OK", VoidCallback? onButtonPressed}) {
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return ErrorDialog(
-          title: title,
-          message: message,
-          buttonText: buttonText,
-          onButtonPressed: onButtonPressed ?? () => Get.back(),
-        );
-      },
-    );
-  }
+  Future<void> register() async {
+    isLoading.value = true;
 
-  Future<void> register(String username, String email, String mobile, String password, String confirmPassword, BuildContext context) async {
+    final username = usernameController.text;
+    final email = emailController.text;
+    final mobile = mobileController.text;
+    final password = passwordController.text;
+    final confirmPassword = confirmPasswordController.text;
+
     if (password != confirmPassword) {
-      showErrorDialog(context, "Error", "Passwords do not match");
+      Get.dialog(
+        ErrorDialog(
+          title: 'Error',
+          message: 'Passwords do not match',
+          buttonText: 'OK',
+          onButtonPressed: () {
+            Get.back();
+          },
+        ),
+      );
+      isLoading.value = false;
       return;
     }
-
-    isLoading.value = true;
 
     try {
       String token = "your_auth_token";
@@ -55,36 +62,35 @@ class RegisterController extends GetxController {
       };
 
       var response = await http.post(
-        Uri.parse('https://your.api.endpoint/register'),
+        Uri.parse('api'),
         headers: headers,
         body: jsonEncode(body),
       );
 
       if (response.statusCode == 200) {
-        Get.snackbar("Success", "Registration successful");
-        Get.toNamed('/login');
+        Get.toNamed('/auth');
       } else {
-        showErrorDialog(
-          context,
-          "Error",
-          "Registration failed",
-          buttonText: "Try Again",
-          onButtonPressed: () {
-            Get.back();
-            register(username, email, mobile, password, confirmPassword, context);
-          },
+        Get.dialog(
+          ErrorDialog(
+            title: 'Oh no!',
+            message: 'Something went wrong\n      Please try again!',
+            buttonText: 'Try again',
+            onButtonPressed: () {
+              Get.back();
+            },
+          ),
         );
       }
     } catch (e) {
-      showErrorDialog(
-        context,
-        "Oh no!",
-        "something went work ",
-        buttonText: "Try Again",
-        onButtonPressed: () {
-          Get.back();
-          register(username, email, mobile, password, confirmPassword, context);
-        },
+      Get.dialog(
+        ErrorDialog(
+          title: 'Oh no!',
+          message: 'Something went wrong\n      Please try again!',
+          buttonText: 'Try again',
+          onButtonPressed: () {
+            Get.back();
+          },
+        ),
       );
     } finally {
       isLoading.value = false;

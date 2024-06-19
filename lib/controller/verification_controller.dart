@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:internship/view/dialog_widget.dart';
 
 class VerificationController extends GetxController {
   var code = List.filled(6, '').obs;
@@ -36,12 +36,8 @@ class VerificationController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-
       } else {
-        showErrorDialog("Error", "Failed to send verification code");
       }
-    } catch (e) {
-      showErrorDialog("Error", "An error occurred");
     } finally {
       isLoading.value = false;
     }
@@ -49,7 +45,6 @@ class VerificationController extends GetxController {
 
   Future<void> verifyCode() async {
     if (!isCodeValid.value) {
-
       return;
     }
 
@@ -65,40 +60,26 @@ class VerificationController extends GetxController {
       var body = jsonEncode({'code': code.join()});
 
       var response = await http.post(
-        Uri.parse('https://your.api.endpoint/verify_code'),
+        Uri.parse('api'),
         headers: headers,
         body: body,
       );
 
       if (response.statusCode == 200) {
-        Get.snackbar("Success", "Code verified successfully");
-        // Navigate to the next screen or perform other actions upon successful verification
+        Get.dialog(
+          ErrorDialog(
+            title: 'Success!',
+            message: 'Verification succeeded!',
+            buttonText: 'Continue',
+            onButtonPressed: () {
+              Get.offNamed('/login');
+            },
+          ),
+        );
       } else {
-        showErrorDialog("Error", "Verification failed");
       }
-    } catch (e) {
-      showErrorDialog("Error", "An error occurred");
     } finally {
       isLoading.value = false;
     }
-  }
-
-  void showErrorDialog(String title, String message) {
-    Get.dialog(
-      AlertDialog(
-        title: Text(title),
-        content: Text(message),
-        actions: <Widget>[
-          TextButton(
-            child: const Text("Try Again"),
-            onPressed: () {
-              Get.back(); // Close the dialog
-              verifyCode(); // Retry verification
-            },
-          ),
-        ],
-      ),
-      barrierDismissible: true,
-    );
   }
 }

@@ -10,7 +10,9 @@ void main() => runApp(GetMaterialApp(
     getPages: [
       GetPage(name: '/login', page: () =>Login()),
       GetPage(name: '/register',page: () =>Register()),
-      GetPage(name: '/auth',page: () =>Verification())
+      GetPage(name: '/auth',page: () =>Verification()),
+
+
     ]
     ,
     home: Splash() ));
