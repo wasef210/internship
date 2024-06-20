@@ -200,8 +200,8 @@ class Register extends StatelessWidget {
                 const SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Obx(() {
-                    return ElevatedButton(
+                  child:
+                     ElevatedButton(
                       onPressed: _registerController.isLoading.value
                           ? null
                           : () {
@@ -223,8 +223,8 @@ class Register extends StatelessWidget {
                           ),
                         ),
                       ),
-                    );
-                  }),
+                    ),
+
                 ),
                 const SizedBox(height: 20),
                 RichText(
@@ -235,8 +235,7 @@ class Register extends StatelessWidget {
                           style: TextStyle(color: Colors.grey)),
                       TextSpan(
                           text: 'login',
-                          style: const TextStyle(
-                              color: Colors.green),
+                          style: const TextStyle(color: Colors.green),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
                               Get.offNamed('/login');
