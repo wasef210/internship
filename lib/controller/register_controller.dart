@@ -16,64 +16,68 @@ class RegisterController extends GetxController {
   final TextEditingController confirmPasswordController = TextEditingController();
 
   void toggleObscurePassword() {
-    obscurePassword.value = !obscurePassword.value;
+    obscurePassword.toggle();
   }
 
   void toggleObscureConfirmPassword() {
-    obscureConfirmPassword.value = !obscureConfirmPassword.value;
+    obscureConfirmPassword.toggle();
   }
 
   Future<void> register() async {
     isLoading.value = true;
 
-    final username = usernameController.text;
-    final email = emailController.text;
-    final mobile = mobileController.text;
-    final password = passwordController.text;
-    final confirmPassword = confirmPasswordController.text;
+    final username = usernameController.text.trim();
+    final email = emailController.text.trim();
+    final phoneNumber = mobileController.text.trim();
+    final password = passwordController.text.trim();
+    final confirmPassword = confirmPasswordController.text.trim();
 
-    if (password != confirmPassword) {
-      Get.dialog(
-        ErrorDialog(
-          title: 'Error',
-          message: 'Passwords do not match',
-          buttonText: 'OK',
-          onButtonPressed: () {
-            Get.back();
-          },
-        ),
-      );
-      isLoading.value = false;
-      return;
-    }
+    print('Registering with:');
+    print('Username: $username');
+    print('Email: $email');
+    print('Phone Number: $phoneNumber');
 
     try {
-      String token = "your_auth_token";
       var headers = {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
       };
 
       var body = {
-        'username': username,
+        'name': username,
         'email': email,
-        'mobile': mobile,
+        'phone_number': phoneNumber,
         'password': password,
+        'password_confirmation': confirmPassword,
+        'image': '',
+        'certificate': '',
       };
 
       var response = await http.post(
-        Uri.parse('api'),
+        Uri.parse('https://task5-ammar-allaw.trainees-mad-s.com/api/auth/Signup'),
         headers: headers,
         body: jsonEncode(body),
       );
 
-      if (response.statusCode == 200) {
+      print('Response status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 201) {
+        var responseData = jsonDecode(response.body);
+
+        print('Registration successful');
+        print('Response data: $responseData');
+
+        clearControllers();
+
         Get.toNamed('/auth');
       } else {
+        final jsonResponse = jsonDecode(response.body);
+        print('Error response: $jsonResponse');
+
         Get.dialog(
           ErrorDialog(
-            title: 'Oh no!',
-            message: 'Something went wrong\n      Please try again!',
+            title: 'Error',
+            message:  'Something went wrong. Please try again!',
             buttonText: 'Try again',
             onButtonPressed: () {
               Get.back();
@@ -82,10 +86,11 @@ class RegisterController extends GetxController {
         );
       }
     } catch (e) {
+      print('Error during registration: $e');
       Get.dialog(
         ErrorDialog(
-          title: 'Oh no!',
-          message: 'Something went wrong\n      Please try again!',
+          title: 'Error',
+          message: 'Something went wrong. Please try again!',
           buttonText: 'Try again',
           onButtonPressed: () {
             Get.back();
@@ -95,5 +100,13 @@ class RegisterController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  void clearControllers() {
+    usernameController.clear();
+    emailController.clear();
+    mobileController.clear();
+    passwordController.clear();
+    confirmPasswordController.clear();
   }
 }

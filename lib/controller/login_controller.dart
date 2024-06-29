@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:internship/view/dialog_widget.dart';
 
 class LoginController extends GetxController {
   var obscureText = true.obs;
   var isLoading = false.obs;
   var rememberMe = false.obs;
-
   final emailController = TextEditingController();
   final mobileController = TextEditingController();
   final passwordController = TextEditingController();
@@ -20,31 +20,38 @@ class LoginController extends GetxController {
   Future<void> login() async {
     isLoading.value = true;
     final email = emailController.text;
-    final mobile = mobileController.text;
+    final phoneNumber = mobileController.text;
     final password = passwordController.text;
 
     try {
-      String token = "your_auth_token";
+
       var headers = {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
       };
 
       var body = {
         'email': email,
-        'mobile': mobile,
+        'phone_number':phoneNumber ,
         'password': password,
       };
 
       var response = await http.post(
-        Uri.parse('api'),
+        Uri.parse('https://task5-ammar-allaw.trainees-mad-s.com/api/auth/Login'),
         headers: headers,
         body: jsonEncode(body),
       );
 
+
+
       if (response.statusCode == 200) {
-        Get.offNamed('/home');
+        var responseData = jsonDecode(response.body);
+        String? receivedToken = responseData['data']['token'];
+
+        await _saveToken(receivedToken);
+
+        Get.offNamed('/sp');
       } else {
+
         Get.dialog(
           const ErrorDialog(
             title: 'Sorry!',
@@ -61,6 +68,13 @@ class LoginController extends GetxController {
       );
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  Future<void> _saveToken(String? token) async {
+    if (token != null) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('token', token);
     }
   }
 }

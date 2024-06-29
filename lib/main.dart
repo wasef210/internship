@@ -11,7 +11,7 @@ void main() => runApp(GetMaterialApp(
       GetPage(name: '/login', page: () =>Login()),
       GetPage(name: '/register',page: () =>Register()),
       GetPage(name: '/auth',page: () =>Verification()),
-
+      GetPage(name: '/sp',page: () =>Splash())
 
     ]
     ,

@@ -17,32 +17,6 @@ class VerificationController extends GetxController {
     isCodeValid.value = code.every((element) => element.isNotEmpty);
   }
 
-  Future<void> sendVerificationCode(String email) async {
-    isLoading.value = true;
-
-    try {
-      String token = "your_auth_token";
-      var headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      };
-
-      var body = jsonEncode({'email': email});
-
-      var response = await http.post(
-        Uri.parse('https://your.api.endpoint/send_code'),
-        headers: headers,
-        body: body,
-      );
-
-      if (response.statusCode == 200) {
-      } else {
-      }
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
   Future<void> verifyCode() async {
     if (!isCodeValid.value) {
       return;
@@ -51,16 +25,17 @@ class VerificationController extends GetxController {
     isLoading.value = true;
 
     try {
-      String token = "your_auth_token";
       var headers = {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
       };
 
-      var body = jsonEncode({'code': code.join()});
+      var body = jsonEncode({
+        'code': code.join(),
+      });
 
       var response = await http.post(
-        Uri.parse('api'),
+        Uri.parse(
+            'https://task5-ammar-allaw.trainees-mad-s.com/api/auth/VerifiedEmail'),
         headers: headers,
         body: body,
       );
@@ -76,8 +51,7 @@ class VerificationController extends GetxController {
             },
           ),
         );
-      } else {
-      }
+      } else {}
     } finally {
       isLoading.value = false;
     }

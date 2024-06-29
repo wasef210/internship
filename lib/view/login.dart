@@ -112,31 +112,31 @@ class Login extends StatelessWidget {
                 const SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
-                  child: Obx(() {
-                    return ElevatedButton(
-                      onPressed: _loginController.isLoading.value
-                          ? null
-                          : () {
-                              _loginController.login();
-                            },
-                      style: ElevatedButton.styleFrom(
-                        shape: const StadiumBorder(),
-                        backgroundColor:
-                            const Color.fromARGB(255, 182, 229, 185),
-                      ),
-                      child: const SizedBox(
-                        width: double.infinity,
-                        child: Text(
-                          "Log in",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Color.fromARGB(255, 3, 80, 20),
-                          ),
+                  child:
+                  ElevatedButton(
+                    onPressed: _loginController.isLoading.value
+                        ? null
+                        : () {
+                      _loginController.login();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      shape: const StadiumBorder(),
+                      backgroundColor:
+                      const Color.fromARGB(255, 182, 229, 185),
+                    ),
+                    child: const SizedBox(
+                      width: double.infinity,
+                      child: Text(
+                        "Log in",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Color.fromARGB(255, 3, 80, 20),
                         ),
                       ),
-                    );
-                  }),
+                    ),
+                  ),
+
                 ),
                 Row(
                   children: [
@@ -170,7 +170,7 @@ class Login extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(25, 5, 25, 5),
                   child: ElevatedButton(
                     onPressed: () {
-                      Get.toNamed('/register');
+                      Get.offNamed('/register');
                     },
                     style: ElevatedButton.styleFrom(
                       shape: const StadiumBorder(),
